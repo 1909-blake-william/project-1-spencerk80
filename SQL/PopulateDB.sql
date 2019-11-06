@@ -1,14 +1,14 @@
-INSERT INTO reimbursement_status (id, status) VALUES (status_id_seq.NEXTVAL, 'Pending');
-INSERT INTO reimbursement_status (id, status) VALUES (status_id_seq.NEXTVAL, 'Approved');
-INSERT INTO reimbursement_status (id, status) VALUES (status_id_seq.NEXTVAL, 'Denied');
+INSERT INTO reimbursement_status (id, status) VALUES (status_id_seq.NEXTVAL, 'PENDING');
+INSERT INTO reimbursement_status (id, status) VALUES (status_id_seq.NEXTVAL, 'APPROVED');
+INSERT INTO reimbursement_status (id, status) VALUES (status_id_seq.NEXTVAL, 'DENIED');
 
-INSERT INTO reimbursement_type (id, type) VALUES (type_id_seq.NEXTVAL, 'Food');
-INSERT INTO reimbursement_type (id, type) VALUES (type_id_seq.NEXTVAL, 'Lodging');
-INSERT INTO reimbursement_type (id, type) VALUES (type_id_seq.NEXTVAL, 'Car Rental');
-INSERT INTO reimbursement_type (id, type) VALUES (type_id_seq.NEXTVAL, 'Flight');
-INSERT INTO reimbursement_type (id, type) VALUES (type_id_seq.NEXTVAL, 'Pub Trans');
-INSERT INTO reimbursement_type (id, type) VALUES (type_id_seq.NEXTVAL, 'Medical');
-INSERT INTO reimbursement_type (id, type) VALUES (type_id_seq.NEXTVAL, 'Other');
+INSERT INTO reimbursement_type (id, type) VALUES (type_id_seq.NEXTVAL, 'FOOD');
+INSERT INTO reimbursement_type (id, type) VALUES (type_id_seq.NEXTVAL, 'LODGING');
+INSERT INTO reimbursement_type (id, type) VALUES (type_id_seq.NEXTVAL, 'CAR_RENTAL');
+INSERT INTO reimbursement_type (id, type) VALUES (type_id_seq.NEXTVAL, 'FLIGHT');
+INSERT INTO reimbursement_type (id, type) VALUES (type_id_seq.NEXTVAL, 'PUB_TRANS');
+INSERT INTO reimbursement_type (id, type) VALUES (type_id_seq.NEXTVAL, 'MEDICAL');
+INSERT INTO reimbursement_type (id, type) VALUES (type_id_seq.NEXTVAL, 'OTHER');
 
 INSERT INTO user_role (id, role) VALUES (role_id_seq.NEXTVAL, 'Manager');
 INSERT INTO user_role (id, role) VALUES (role_id_seq.NEXTVAL, 'Employee');
