@@ -8,9 +8,9 @@ public class ConnectionUtil {
 	
 	public static Connection getConnection() throws SQLException {
 		
-		String		url			= System.getenv("BANK_DB_URL"),
-					username	= System.getenv("BANK_DB_USERNAME"),
-					password	= System.getenv("BANK_DB_PASSWD");
+		String		url			= System.getenv("REIMBURSE_DB_URL"),
+					username	= System.getenv("REIMBURSE_DB_USERNAME"),
+					password	= System.getenv("REIMBURSE_DB_PASSWD");
 		
 		return DriverManager.getConnection(url, username, password);
 		
