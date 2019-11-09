@@ -2,6 +2,6 @@ package com.revature;
 
 public enum Status {
 	
-	PENDING, APPROVED, DENIED
+	INVALID, PENDING, APPROVED, DENIED
 
 }
