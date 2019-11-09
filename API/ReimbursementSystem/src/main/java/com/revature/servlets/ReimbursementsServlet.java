@@ -93,7 +93,36 @@ public class ReimbursementsServlet extends HttpServlet {
 	
 	protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
+		ObjectMapper		om					= new ObjectMapper();
+		Reimbursement		reimbursement;
+		String				setTo				= req.getParameter("set"),
+							resolver			= req.getParameter("resolver");
 		
+		try {
+			
+			if(setTo == null || resolver == null) {
+				
+				resp.setStatus(400);
+				return;
+				
+			}
+			
+			reimbursement = om.readValue(req.getReader(), Reimbursement.class);
+			
+			if(ReimbursementDao.currentImplementation.updateStatus(reimbursement, setTo, resolver) > 0) 
+				
+				resp.setStatus(201);
+			
+			else
+				
+				resp.setStatus(400);
+			
+		} catch(Exception e) {
+			
+			resp.setStatus(500);
+			System.err.println(e.getMessage());
+			
+		}
 		
 	}
 

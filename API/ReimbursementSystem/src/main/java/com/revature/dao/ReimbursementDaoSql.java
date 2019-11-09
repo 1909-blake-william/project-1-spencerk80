@@ -4,12 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.revature.Status;
-import com.revature.Type;
 import com.revature.models.Reimbursement;
 import com.revature.util.ConnectionUtil;
 import com.revature.util.SafeParser;
@@ -128,9 +126,42 @@ public class ReimbursementDaoSql implements ReimbursementDao {
 	}
 
 	@Override
-	public int updateStatus(Reimbursement r) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+	public int updateStatus(Reimbursement r, String setTo, String resolver) throws SQLException {
+	
+		PreparedStatement 	ps;
+		String[]			author	= splitName(r.getAuthor());
+		
+		try(Connection c = ConnectionUtil.getConnection()) {
+			
+			ps = c.prepareStatement("UPDATE reimbursment " + 
+									"SET status = ( " + 
+									"    SELECT id FROM reimbursement_status " + 
+									"    WHERE status = ? " + 
+									"), resolved = SYSDATE, " + 
+									"resolver = ( " +
+									"	 SELECT id FROM users " +
+									" 	 WHERE username = ? " +
+									") " +
+									"WHERE submitted = ? " + 
+									"AND author = ( " + 
+									"    SELECT id FROM users " + 
+									"    WHERE lastname = ? AND firstname = ? " + 
+									")");
+			
+			ps.setString(1, SafeParser.parseStatus(setTo).toString());
+			ps.setString(2, resolver);
+			ps.setTimestamp(3, r.getSubmitted());
+			ps.setString(4, author[1]);
+			ps.setString(5, author[0]);
+			
+			return ps.executeUpdate();
+			
+		} catch(SQLException e) {
+			
+			throw e;
+			
+		}
+		
 	}
 	
 	private String[] splitName(String s) {
