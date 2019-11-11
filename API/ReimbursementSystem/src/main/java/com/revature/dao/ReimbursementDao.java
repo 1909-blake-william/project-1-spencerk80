@@ -11,6 +11,7 @@ public interface ReimbursementDao {
 	ReimbursementDao currentImplementation = ReimbursementDaoSql.instance;
 	
 	List<Reimbursement> findall() throws SQLException;
+	List<Reimbursement> findByName(String name) throws SQLException;
 	List<Reimbursement> findByStatus(Status status) throws SQLException;
 	int write(Reimbursement r) throws SQLException;
 	int updateStatus(Reimbursement r, String setTo, String resolver) throws SQLException;
