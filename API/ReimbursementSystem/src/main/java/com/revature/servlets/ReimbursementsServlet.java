@@ -16,8 +16,10 @@ import com.revature.dao.ReimbursementDao;
 
 public class ReimbursementsServlet extends HttpServlet {
 	
-
-	private static final long serialVersionUID = 3826173837422498900L;
+	private static final int	INTERNAL_FAILURE	= 500,
+								BAD_REQUEST			= 400,
+								SUCCESS				= 201;
+	private static final long 	serialVersionUID 	= 3826173837422498900L;
 	
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -55,7 +57,7 @@ public class ReimbursementsServlet extends HttpServlet {
 			
 		} catch(SQLException e) {
 			
-			resp.setStatus(500);
+			resp.setStatus(INTERNAL_FAILURE);
 			resp.getWriter().write(e.getMessage());
 			System.err.println(e.getMessage());
 			return;
@@ -80,15 +82,15 @@ public class ReimbursementsServlet extends HttpServlet {
 			
 			if(ReimbursementDao.currentImplementation.write(reimbursement) > 0)
 				
-				resp.setStatus(201);
+				resp.setStatus(SUCCESS);
 			
 			else
 				
-				resp.setStatus(400);
+				resp.setStatus(BAD_REQUEST);
 		
 		} catch(Exception e) {
 		
-			resp.setStatus(500);
+			resp.setStatus(INTERNAL_FAILURE);
 			System.err.println(e.getMessage());
 			
 		}
@@ -106,7 +108,7 @@ public class ReimbursementsServlet extends HttpServlet {
 			
 			if(setTo == null || resolver == null) {
 				
-				resp.setStatus(400);
+				resp.setStatus(BAD_REQUEST);
 				return;
 				
 			}
@@ -115,15 +117,15 @@ public class ReimbursementsServlet extends HttpServlet {
 			
 			if(ReimbursementDao.currentImplementation.updateStatus(reimbursement, setTo, resolver) > 0) 
 				
-				resp.setStatus(201);
+				resp.setStatus(SUCCESS);
 			
 			else
 				
-				resp.setStatus(400);
+				resp.setStatus(BAD_REQUEST);
 			
 		} catch(Exception e) {
 			
-			resp.setStatus(500);
+			resp.setStatus(INTERNAL_FAILURE);
 			System.err.println(e.getMessage());
 			
 		}

@@ -13,8 +13,28 @@ import com.revature.dao.UserDao;
 import com.revature.models.User;
 
 public class AuthServlet extends HttpServlet {
+	
+	private final static int		INTERNAL_FAILURE		= 500,
+									BAD_LOGIN 				= 401,
+									GOOD_LOGIN 				= 201;
+	private final static boolean 	CREATE_NEW_SESSION 		= true,
+									GET_EXISTING_SESSION 	= false;
 
 	private static final long serialVersionUID = -1955927604198436588L;
+	
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		resp.addHeader("Access-Control-Allow-Origin", "http://localhost:5500");
+		resp.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
+		resp.addHeader("Access-Control-Allow-Headers",
+				"Origin, Methods, Credentials, X-Requested-With, Content-Type, Accept");
+		resp.addHeader("Access-Control-Allow-Credentials", "true");
+		resp.setContentType("application/json");
+		
+		super.service(req, resp);
+		
+	}
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -23,7 +43,7 @@ public class AuthServlet extends HttpServlet {
 		User credentials = (User) om.readValue(req.getReader(), User.class);
 		User loggedInUser = null;
 		
-		if("/ReimbursementSystem/auth/login".contentEquals(req.getRequestURI())) {
+		if("/ReimbursementSystem/auth/login".equals(req.getRequestURI())) {
 		
 			try {
 				
@@ -32,20 +52,20 @@ public class AuthServlet extends HttpServlet {
 			} catch(SQLException e) {
 				
 				System.err.println(e.getMessage());
-				resp.setStatus(401);
+				resp.setStatus(INTERNAL_FAILURE);
 				return;
 				
 			}
 			
 			if (loggedInUser == null) {
 				
-				resp.setStatus(401); // Unauthorized status code
+				resp.setStatus(BAD_LOGIN);
 				return;
 				
 			} else {
 				
-				resp.setStatus(201);
-				req.getSession().setAttribute("user", loggedInUser);
+				resp.setStatus(GOOD_LOGIN);
+				req.getSession(CREATE_NEW_SESSION).setAttribute("user", loggedInUser);
 				resp.getWriter().write(om.writeValueAsString(loggedInUser));
 				return;
 				
@@ -63,7 +83,7 @@ public class AuthServlet extends HttpServlet {
 		if ("/PokemonApi/auth/session-user".equals(req.getRequestURI())) {
 			
 			om = new ObjectMapper();
-			json = om.writeValueAsString(req.getSession().getAttribute("user"));
+			json = om.writeValueAsString(req.getSession(GET_EXISTING_SESSION).getAttribute("user"));
 			resp.getWriter().write(json);
 			
 		}

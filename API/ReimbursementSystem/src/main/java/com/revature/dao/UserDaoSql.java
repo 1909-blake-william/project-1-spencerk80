@@ -22,15 +22,15 @@ public class UserDaoSql implements UserDao {
 		
 		try(Connection c = ConnectionUtil.getConnection()) {
 			
-			ps = c.prepareStatement("SELECT username, lastname || ', ' || firstname AS fullname, passwd " +
-									"WHERE username = ? AND passwd = ?");
+			ps = c.prepareStatement("SELECT username, lastname || ', ' || firstname AS fullname, password FROM users " +
+									"WHERE username = ? AND password = ?");
 			ps.setString(1, username);
 			ps.setString(2, password);
 			rs = ps.executeQuery();
 			
 			if(rs.next())
 				
-				return new User(rs.getString("username"), rs.getString("fullname"), rs.getString("passwd"));
+				return new User(rs.getString("username"), rs.getString("fullname"), rs.getString("password"));
 			
 			else
 				

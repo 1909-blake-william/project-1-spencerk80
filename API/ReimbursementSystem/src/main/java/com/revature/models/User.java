@@ -7,7 +7,10 @@ public class User {
 						password;
 	
 	
-
+	public User() {
+		super();
+	}
+	
 	public User(String username, String fullname, String password) {
 		super();
 		this.username = username;

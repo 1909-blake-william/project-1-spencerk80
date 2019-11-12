@@ -7,9 +7,19 @@
 		<servlet-class>com.revature.servlets.ReimbursementsServlet</servlet-class>
 	</servlet>
 	
+	<servlet>
+		<servlet-name>AuthServlet</servlet-name>
+		<servlet-class>com.revature.servlets.AuthServlet</servlet-class>
+	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>ReimbursementServlet</servlet-name>
 		<url-pattern>/reimbursements</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>AuthServlet</servlet-name>
+		<url-pattern>/auth/*</url-pattern>
 	</servlet-mapping>
 
 </web-app>
