@@ -21,8 +21,17 @@ public class ReimbursementsServlet extends HttpServlet {
 								SUCCESS				= 201;
 	private static final long 	serialVersionUID 	= 3826173837422498900L;
 	
+	ObjectMapper 				om 					= new ObjectMapper();
+	
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		resp.addHeader("Access-Control-Allow-Origin", "http://localhost:5500");
+		resp.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
+		resp.addHeader("Access-Control-Allow-Headers",
+						"Origin, Methods, Credentials, X-Requested-With, Content-Type, Accept");
+		resp.addHeader("Access-Control-Allow-Credentials", "true");
+		resp.setContentType("application/json");
 		
 		if(req.getMethod().equalsIgnoreCase("PATCH"))
 			
@@ -37,7 +46,6 @@ public class ReimbursementsServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
-		ObjectMapper 		om 					= new ObjectMapper();
 		List<Reimbursement>	reimbursements;
 		String				json;
 		
@@ -73,7 +81,6 @@ public class ReimbursementsServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
-		ObjectMapper 		om 					= new ObjectMapper();
 		Reimbursement		reimbursement;
 		
 		try { 
@@ -99,7 +106,6 @@ public class ReimbursementsServlet extends HttpServlet {
 	
 	protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
-		ObjectMapper		om					= new ObjectMapper();
 		Reimbursement		reimbursement;
 		String				setTo				= req.getParameter("set"),
 							resolver			= req.getParameter("resolver");

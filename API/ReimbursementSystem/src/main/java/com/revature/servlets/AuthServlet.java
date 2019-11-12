@@ -19,8 +19,9 @@ public class AuthServlet extends HttpServlet {
 									GOOD_LOGIN 				= 201;
 	private final static boolean 	CREATE_NEW_SESSION 		= true,
 									GET_EXISTING_SESSION 	= false;
-
-	private static final long serialVersionUID = -1955927604198436588L;
+	private static final long 		serialVersionUID 		= -1955927604198436588L;
+	
+	ObjectMapper 					om 						= new ObjectMapper();
 	
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -28,7 +29,7 @@ public class AuthServlet extends HttpServlet {
 		resp.addHeader("Access-Control-Allow-Origin", "http://localhost:5500");
 		resp.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
 		resp.addHeader("Access-Control-Allow-Headers",
-				"Origin, Methods, Credentials, X-Requested-With, Content-Type, Accept");
+						"Origin, Methods, Credentials, X-Requested-With, Content-Type, Accept");
 		resp.addHeader("Access-Control-Allow-Credentials", "true");
 		resp.setContentType("application/json");
 		
@@ -39,7 +40,6 @@ public class AuthServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		ObjectMapper om = new ObjectMapper();
 		User credentials = (User) om.readValue(req.getReader(), User.class);
 		User loggedInUser = null;
 		
@@ -77,12 +77,10 @@ public class AuthServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
-		ObjectMapper om;
 		String json;
 		
 		if ("/PokemonApi/auth/session-user".equals(req.getRequestURI())) {
 			
-			om = new ObjectMapper();
 			json = om.writeValueAsString(req.getSession(GET_EXISTING_SESSION).getAttribute("user"));
 			resp.getWriter().write(json);
 			

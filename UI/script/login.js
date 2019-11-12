@@ -37,7 +37,7 @@ function clearError() {
 async function authenticateUser(user) {
     let response;
     try {
-        response = await fetch('http://localhost:8080/ReimbursementSystem/auth/login', {
+        const response = await fetch('http://localhost:8080/ReimbursementSystem/auth/login', {
             method: 'POST',
             credentials: 'include',
             headers: {
