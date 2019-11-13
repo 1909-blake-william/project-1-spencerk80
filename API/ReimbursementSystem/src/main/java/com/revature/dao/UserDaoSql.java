@@ -22,7 +22,8 @@ public class UserDaoSql implements UserDao {
 		
 		try(Connection c = ConnectionUtil.getConnection()) {
 			
-			ps = c.prepareStatement("SELECT username, lastname || ', ' || firstname AS fullname, password FROM users " +
+			ps = c.prepareStatement("SELECT username, lastname || ', ' || firstname AS fullname, password, user_role.role FROM users " +
+									"INNER JOIN user_role ON users.role = user_role.id " +
 									"WHERE username = ? AND password = ?");
 			ps.setString(1, username);
 			ps.setString(2, password);
@@ -30,7 +31,7 @@ public class UserDaoSql implements UserDao {
 			
 			if(rs.next())
 				
-				return new User(rs.getString("username"), rs.getString("fullname"), rs.getString("password"));
+				return new User(rs.getString("username"), rs.getString("fullname"), rs.getString("password"), rs.getString("role"));
 			
 			else
 				

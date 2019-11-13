@@ -1,8 +1,9 @@
 class User {
-    constructor(username, fullname, password) {
+    constructor(username, fullname, password, role) {
         this.username = username;
         this.fullname = fullname;
         this.password = password;
+        this.role = role;
     }
 }
 function login(event) {
@@ -17,7 +18,7 @@ function login(event) {
 function getLoginInfo() {
     let username = document.getElementById("username-input").value;
     let password = document.getElementById("pass-input").value;
-    return new User(username, '', password);
+    return new User(username, '', password, '');
 }
 function showError(msg) {
     let text = document.getElementById("status");
@@ -47,9 +48,14 @@ async function authenticateUser(user) {
         });
         console.log(response.status);
         if (response.status !== 201) {
-            console.log('Invalid login');
+            showError('Invalid login');
             return;
         }
+        user = await response.json();
+        if (user.role === 'Manager')
+            window.location.href = '/manage.html';
+        else
+            window.location.href = '/tickets.html';
     }
     catch (error) {
         console.error(error);

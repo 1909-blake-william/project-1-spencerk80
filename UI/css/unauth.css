@@ -1,0 +1,24 @@
+#mid-section {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+h1 {
+
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 28pt;
+    text-decoration: underline;
+
+}
+
+h2 {
+
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 18pt;
+
+}

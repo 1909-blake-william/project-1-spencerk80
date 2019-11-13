@@ -1,6 +1,6 @@
 class User {
 
-    constructor(public username: string, public fullname: string, public password: string) {
+    constructor(public username: string, public fullname: string, public password: string, public role: string) {
 
     }
 }
@@ -27,7 +27,7 @@ function getLoginInfo():User {
     let username = (<HTMLInputElement> document.getElementById("username-input")).value
     let password = (<HTMLInputElement> document.getElementById("pass-input")).value
 
-    return new User(username, '', password)
+    return new User(username, '', password, '')
 
 }
 
@@ -78,10 +78,20 @@ async function authenticateUser(user: User) {
 
         if(response.status !== 201) {
 
-            console.log('Invalid login')
+            showError('Invalid login')
             return
 
         }
+
+        user = <User> await response.json()
+
+        if(user.role === 'Manager')
+
+            window.location.href = '/manage.html'
+
+        else
+
+            window.location.href = '/tickets.html'
 
     } catch(error) {
 

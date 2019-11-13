@@ -72,6 +72,7 @@ public class AuthServlet extends HttpServlet {
 			}
 			
 		}
+			
 	}
 
 	@Override
@@ -79,13 +80,24 @@ public class AuthServlet extends HttpServlet {
 		
 		String json;
 		
-		if ("/PokemonApi/auth/session-user".equals(req.getRequestURI())) {
+		if ("/ReimbursementSystem/auth/session-user".equals(req.getRequestURI())) {
 			
 			json = om.writeValueAsString(req.getSession(GET_EXISTING_SESSION).getAttribute("user"));
 			resp.getWriter().write(json);
 			
 		}
 		
-	}	
+	}
+	
+	@Override
+	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+	if("/ReimbursementSystem/auth/logout".equals(req.getRequestURI())) {
+		
+		req.getSession(GET_EXISTING_SESSION).invalidate();
+		
+	}
+		
+	}
 
 }
