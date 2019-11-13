@@ -26,7 +26,7 @@ public class ReimbursementDaoSql implements ReimbursementDao {
 		
 		try(Connection c = ConnectionUtil.getConnection()) {
 			
-			ps = c.prepareStatement("SELECT amount, description, submitted, resolved, u1.lastname || \', \' || u1.firstname AS author, " +
+			ps = c.prepareStatement("SELECT amount, description, submitted, resolved, u1.lastname || \', \' || u1.firstname AS author, u1.username, " +
 									"u2.lastname || \', \' || u2.firstname AS resolver, reimbursement_status.status, reimbursement_type.type " +
 									"FROM reimbursment INNER JOIN reimbursement_status " +
 									"ON reimbursement_status.id = reimbursment.status LEFT JOIN reimbursement_type " +
@@ -37,7 +37,7 @@ public class ReimbursementDaoSql implements ReimbursementDao {
 			
 			while(rs.next())
 				
-				list.add(new Reimbursement(rs.getDouble("AMOUNT"), rs.getString("DESCRIPTION"), rs.getString("AUTHOR"),
+				list.add(new Reimbursement(rs.getDouble("AMOUNT"), rs.getString("DESCRIPTION"), rs.getString("AUTHOR"), rs.getString("USERNAME"),
 											rs.getString("RESOLVER").equals(", ") ? null : rs.getString("RESOLVER"),
 											rs.getTimestamp("SUBMITTED"), rs.getTimestamp("RESOLVED"), 
 											SafeParser.parseType(rs.getString("TYPE")), SafeParser.parseStatus(rs.getString("STATUS"))));
@@ -61,7 +61,7 @@ public class ReimbursementDaoSql implements ReimbursementDao {
 		
 		try(Connection c = ConnectionUtil.getConnection()) {
 			
-			ps = c.prepareStatement("SELECT amount, description, submitted, resolved, u1.lastname || \', \' || u1.firstname AS author, " +
+			ps = c.prepareStatement("SELECT amount, description, submitted, resolved, u1.lastname || \', \' || u1.firstname AS author, u1.username, " +
 									"u2.lastname || \', \' || u2.firstname AS resolver, reimbursement_status.status, reimbursement_type.type " +
 									"FROM reimbursment INNER JOIN reimbursement_status " +
 									"ON reimbursement_status.id = reimbursment.status LEFT JOIN reimbursement_type " +
@@ -76,7 +76,7 @@ public class ReimbursementDaoSql implements ReimbursementDao {
 			
 			while(rs.next())
 				
-				list.add(new Reimbursement(rs.getDouble("AMOUNT"), rs.getString("DESCRIPTION"), rs.getString("AUTHOR"), 
+				list.add(new Reimbursement(rs.getDouble("AMOUNT"), rs.getString("DESCRIPTION"), rs.getString("AUTHOR"), rs.getString("USERNAME"), 
 											rs.getString("RESOLVER").equals(", ") ? null : rs.getString("RESOLVER"),
 											rs.getTimestamp("SUBMITTED"), rs.getTimestamp("RESOLVED"), 
 											SafeParser.parseType(rs.getString("TYPE")), SafeParser.parseStatus(rs.getString("STATUS"))));
@@ -93,16 +93,15 @@ public class ReimbursementDaoSql implements ReimbursementDao {
 	}
 	
 	@Override
-	public List<Reimbursement> findByName(String fullname) throws SQLException {
+	public List<Reimbursement> findByName(String username) throws SQLException {
 		
 		List<Reimbursement> list	= new ArrayList<>();
 		PreparedStatement	ps;
 		ResultSet			rs;
-		String[]			name 	= splitName(fullname);
 		
 		try(Connection c = ConnectionUtil.getConnection()) {
 			
-			ps = c.prepareStatement("SELECT amount, description, submitted, resolved, u1.lastname || \', \' || u1.firstname AS author, " +
+			ps = c.prepareStatement("SELECT amount, description, submitted, resolved, u1.lastname || \', \' || u1.firstname AS author, u1.username, " +
 									"u2.lastname || \', \' || u2.firstname AS resolver, reimbursement_status.status, reimbursement_type.type " +
 									"FROM reimbursment INNER JOIN reimbursement_status " +
 									"ON reimbursement_status.id = reimbursment.status LEFT JOIN reimbursement_type " +
@@ -110,15 +109,14 @@ public class ReimbursementDaoSql implements ReimbursementDao {
 									"ON u1.id = reimbursment.author LEFT JOIN users u2 " +
 									"ON u2.id = reimbursment.resolver " +
 									"WHERE reimbursment.status = (SELECT id FROM reimbursement_status " +
-									"WHERE firstname = ? AND lastname = ?)");
+									"WHERE u1.username = ?)");
 			
-			ps.setString(1, name[0]);
-			ps.setString(2, name[1]);
+			ps.setString(1, username);
 			rs = ps.executeQuery();
 			
 			while(rs.next())
 				
-				list.add(new Reimbursement(rs.getDouble("AMOUNT"), rs.getString("DESCRIPTION"), rs.getString("AUTHOR"), 
+				list.add(new Reimbursement(rs.getDouble("AMOUNT"), rs.getString("DESCRIPTION"), rs.getString("AUTHOR"), rs.getString("USERNAME"), 
 											rs.getString("RESOLVER").equals(", ") ? null : rs.getString("RESOLVER"),
 											rs.getTimestamp("SUBMITTED"), rs.getTimestamp("RESOLVED"), 
 											SafeParser.parseType(rs.getString("TYPE")), SafeParser.parseStatus(rs.getString("STATUS"))));
@@ -138,24 +136,20 @@ public class ReimbursementDaoSql implements ReimbursementDao {
 	public int write(Reimbursement r) throws SQLException {
 		
 		PreparedStatement 	ps;
-		String[]			author;
-		
-		author = splitName(r.getAuthor());
 		
 		try(Connection c = ConnectionUtil.getConnection()) {
 			
 			ps = c.prepareStatement("INSERT INTO reimbursment " + 
 									"VALUES (rmbsmnt_id_seq.NEXTVAL, ?, SYSDATE, NULL, ?, NULL, " + 
-									"(SELECT id FROM users WHERE firstname = ? AND lastname = ?), " + 
+									"(SELECT id FROM users WHERE username = ?), " + 
 									"NULL, (SELECT id FROM reimbursement_status WHERE status = ?), " + 
 									"(SELECT id FROM reimbursement_type WHERE type = ?))");
 			
 			ps.setDouble(1, r.getAmount());
 			ps.setString(2, r.getDescription());
-			ps.setString(3, author[0]);
-			ps.setString(4, author[1]);
-			ps.setString(5, r.getStatus().toString());
-			ps.setString(6, r.getType().toString());
+			ps.setString(3, r.getUsername());
+			ps.setString(4, r.getStatus().toString());
+			ps.setString(5, r.getType().toString());
 			
 			return ps.executeUpdate();
 			
@@ -171,7 +165,6 @@ public class ReimbursementDaoSql implements ReimbursementDao {
 	public int updateStatus(Reimbursement r, String setTo, String resolver) throws SQLException {
 	
 		PreparedStatement 	ps;
-		String[]			author	= splitName(r.getAuthor());
 		
 		try(Connection c = ConnectionUtil.getConnection()) {
 			
@@ -187,14 +180,13 @@ public class ReimbursementDaoSql implements ReimbursementDao {
 									"WHERE submitted = ? " + 
 									"AND author = ( " + 
 									"    SELECT id FROM users " + 
-									"    WHERE lastname = ? AND firstname = ? " + 
+									"    WHERE username = ? " + 
 									")");
 			
 			ps.setString(1, SafeParser.parseStatus(setTo).toString());
 			ps.setString(2, resolver);
 			ps.setTimestamp(3, r.getSubmitted());
-			ps.setString(4, author[1]);
-			ps.setString(5, author[0]);
+			ps.setString(4, r.getUsername());
 			
 			return ps.executeUpdate();
 			
@@ -203,17 +195,6 @@ public class ReimbursementDaoSql implements ReimbursementDao {
 			throw e;
 			
 		}
-		
-	}
-	
-	private String[] splitName(String s) {
-		
-		String[] name = new String[2];
-		
-		name[0] = s.substring(s.indexOf(',') + 2);
-		name[1] = s.substring(0, s.indexOf(','));
-
-		return name;
 		
 	}
 

@@ -63,14 +63,14 @@ async function authenticateUser(user: User) {
 
             const response = await fetch('http://localhost:8080/ReimbursementSystem/auth/login', {
 
-            method: 'POST',
-            credentials: 'include',
-            headers: {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
 
-                'Content-Type': 'application/json'
+                    'Content-Type': 'application/json'
 
-            },
-            body: JSON.stringify(user)
+                },
+                body: JSON.stringify(user)
 
         })
 

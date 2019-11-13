@@ -13,6 +13,7 @@ public class Reimbursement implements Serializable {
 	private double 		amount;
 			String		description,
 						author,
+						username,
 						resolver;
 			Timestamp	submitted,
 						resolved;
@@ -22,7 +23,7 @@ public class Reimbursement implements Serializable {
 	@SuppressWarnings("unused")
 	private Reimbursement() {super();}
 
-	public Reimbursement(double amount, String description, String author, String resolver, Timestamp submitted,
+	public Reimbursement(double amount, String description, String author, String username, String resolver, Timestamp submitted,
 			Timestamp resolved, Type type, Status status) {
 		
 		super();
@@ -30,6 +31,7 @@ public class Reimbursement implements Serializable {
 		this.amount = amount;
 		this.description = description;
 		this.author = author;
+		this.username = username;
 		this.resolver = resolver;
 		this.submitted = submitted;
 		this.resolved = resolved;
@@ -112,6 +114,14 @@ public class Reimbursement implements Serializable {
 	
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	@Override

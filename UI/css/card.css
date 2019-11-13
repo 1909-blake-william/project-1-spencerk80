@@ -1,0 +1,38 @@
+.card {
+
+    background-color: rgba(245, 160, 30, 0.58);
+    width: 15%;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    margin-right: 20px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+
+}
+
+.head {
+
+    border-bottom: 1px solid black;
+
+}
+
+.resolved {
+
+    border-top: 1px solid black;
+
+}
+
+.foot button {
+
+    width: 50%;
+    background-color: rgb(210, 170, 235);
+    border-radius: 5px;
+}
+
+#mid-section {
+
+    padding-top: 20px;
+
+}
