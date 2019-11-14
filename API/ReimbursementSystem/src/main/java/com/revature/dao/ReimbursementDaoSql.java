@@ -93,6 +93,45 @@ public class ReimbursementDaoSql implements ReimbursementDao {
 	}
 	
 	@Override
+	public List<Reimbursement> findByName(String username) throws SQLException {
+		
+		List<Reimbursement> list	= new ArrayList<>();
+		PreparedStatement	ps;
+		ResultSet			rs;
+		
+		try(Connection c = ConnectionUtil.getConnection()) {
+			
+			ps = c.prepareStatement("SELECT amount, description, submitted, resolved, u1.lastname || \', \' || u1.firstname AS author, u1.username, " +
+									"u2.lastname || \', \' || u2.firstname AS resolver, reimbursement_status.status, reimbursement_type.type " +
+									"FROM reimbursment INNER JOIN reimbursement_status " +
+									"ON reimbursement_status.id = reimbursment.status LEFT JOIN reimbursement_type " +
+									"ON reimbursement_type.id = reimbursment.type LEFT JOIN users u1 " +
+									"ON u1.id = reimbursment.author LEFT JOIN users u2 " +
+									"ON u2.id = reimbursment.resolver " +
+									"WHERE author = (SELECT id FROM users WHERE username = ?)");
+			
+			ps.setString(1, username);
+			rs = ps.executeQuery();
+			
+			while(rs.next())
+				
+				list.add(new Reimbursement(rs.getDouble("AMOUNT"), rs.getString("DESCRIPTION"), rs.getString("AUTHOR"), rs.getString("USERNAME"), 
+											rs.getString("RESOLVER").equals(", ") ? null : rs.getString("RESOLVER"),
+											rs.getTimestamp("SUBMITTED"), rs.getTimestamp("RESOLVED"), 
+											SafeParser.parseType(rs.getString("TYPE")), SafeParser.parseStatus(rs.getString("STATUS"))));
+				
+			
+		} catch(SQLException e) {
+			
+			throw e;
+			
+		}
+		
+		return list;		
+		
+	}
+	
+	@Override
 	public List<Reimbursement> findByName(String username, String status) throws SQLException {
 		
 		List<Reimbursement> list	= new ArrayList<>();
@@ -109,7 +148,7 @@ public class ReimbursementDaoSql implements ReimbursementDao {
 									"ON u1.id = reimbursment.author LEFT JOIN users u2 " +
 									"ON u2.id = reimbursment.resolver " +
 									"WHERE reimbursment.status = (SELECT id FROM reimbursement_status " +
-									"WHERE reimbursement_status.status = ?) AND u1.username = ?");
+									"WHERE reimbursement_status.status = ?) AND author = (SELECT id FROM users WHERE username = ?)");
 			
 			ps.setString(1, status);
 			ps.setString(2, username);

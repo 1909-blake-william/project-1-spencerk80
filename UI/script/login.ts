@@ -40,7 +40,7 @@ function showError(msg: string): void {
     text.style.fontSize = '12pt'
     text.style.textDecoration = 'none'
 
-    setTimeout(clearError, 1500)
+    setTimeout(clearError, 3000)
 
 }
 

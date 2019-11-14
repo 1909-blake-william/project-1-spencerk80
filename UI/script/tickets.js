@@ -72,6 +72,7 @@ function showForm() {
     name.setAttribute('value', user.fullname);
     amount.setAttribute('id', 'money');
     amount.setAttribute('type', 'number');
+    amount.setAttribute('step', '0.01');
     type.setAttribute('id', 'type');
     car.setAttribute('value', 'car_rental');
     fly.setAttribute('value', 'flight');
@@ -124,6 +125,10 @@ function newTicket(event) {
         showError('Error: Please enter the amount for which you wish to be reimbursed');
         return;
     }
+    if (type === 'other' && desc === '') {
+        showError('Error: When selecting "other", a description is manditory');
+        return;
+    }
     reimbursement = new Reimbursement(amount, desc, user.fullname, user.username, null, null, null, type, 'PENDING');
     submitTicket(reimbursement);
 }
@@ -131,15 +136,15 @@ function showError(msg) {
     const error = document.createElement('h1');
     error.setAttribute('id', 'error');
     error.innerHTML = msg;
-    document.getElementById('mid-section').appendChild(error);
-    setTimeout(clearError, 1500);
+    document.getElementById('body').appendChild(error);
+    setTimeout(clearError, 3000);
 }
 function showSuccess(msg) {
     const success = document.createElement('h1');
     success.setAttribute('id', 'success');
     success.innerHTML = msg;
-    document.getElementById('mid-section').appendChild(success);
-    setTimeout(clearSuccess, 1500);
+    document.getElementById('body').appendChild(success);
+    setTimeout(clearSuccess, 3000);
 }
 function clearError() {
     document.getElementById('error').remove();
@@ -178,7 +183,8 @@ async function get(status) {
     try {
         switch (status) {
             case 'pending':
-                response = await fetch(`http://localhost:8080/ReimbursementSystem/reimbursements?username=${user.username}&status=pending`, {
+                document.getElementById('indicator').innerHTML = 'Pending';
+                response = await fetch(`http://localhost:8080/ReimbursementSystem/reimbursements?name=${user.username}&status=pending`, {
                     method: 'GET',
                     credentials: 'include',
                     headers: {
@@ -187,7 +193,8 @@ async function get(status) {
                 });
                 break;
             case 'approved':
-                response = await fetch(`http://localhost:8080/ReimbursementSystem/reimbursements?username=${user.username}&status=approved`, {
+                document.getElementById('indicator').innerHTML = 'Approved';
+                response = await fetch(`http://localhost:8080/ReimbursementSystem/reimbursements?name=${user.username}&status=approved`, {
                     method: 'GET',
                     credentials: 'include',
                     headers: {
@@ -196,7 +203,8 @@ async function get(status) {
                 });
                 break;
             case 'denied':
-                response = await fetch(`http://localhost:8080/ReimbursementSystem/reimbursements?username=${user.username}&status=denied`, {
+                document.getElementById('indicator').innerHTML = 'Denied';
+                response = await fetch(`http://localhost:8080/ReimbursementSystem/reimbursements?name=${user.username}&status=denied`, {
                     method: 'GET',
                     credentials: 'include',
                     headers: {
@@ -205,7 +213,8 @@ async function get(status) {
                 });
                 break;
             default:
-                response = await fetch(`http://localhost:8080/ReimbursementSystem/reimbursements?username=${user.username}`, {
+                document.getElementById('indicator').innerHTML = 'All';
+                response = await fetch(`http://localhost:8080/ReimbursementSystem/reimbursements?name=${user.username}`, {
                     method: 'GET',
                     credentials: 'include',
                     headers: {
@@ -235,6 +244,7 @@ function clearPage() {
     let midSection = document.getElementById('mid-section');
     while (midSection.firstChild)
         midSection.firstChild.remove();
+    document.getElementById('indicator').innerHTML = '';
 }
 function makeInfoCard(reimbursement) {
     const submittedDate = new Date(reimbursement.submitted);
@@ -259,14 +269,14 @@ function makeInfoCard(reimbursement) {
         resolved.setAttribute('class', 'resolved');
     name.innerHTML = `${reimbursement.author}`;
     amount.innerHTML = `$${reimbursement.amount}`;
-    submitted.innerHTML = `${submittedDate.getMonth()}/${submittedDate.getDay()}/${submittedDate.getFullYear()} ${submittedDate.getHours()}:${submittedDate.getMinutes()}:${submittedDate.getSeconds()}`;
+    submitted.innerHTML = `${submittedDate.getMonth() + 1}/${submittedDate.getDay()}/${submittedDate.getFullYear()} ${submittedDate.getHours()}:${submittedDate.getMinutes()}:${submittedDate.getSeconds()}`;
     status.innerHTML = `${reimbursement.status}`;
     type.innerHTML = `${reimbursement.type}`;
     desc.innerHTML = `${reimbursement.description}`;
     if (resolver)
         resolver.innerHTML = `${reimbursement.resolver}`;
     if (resDate)
-        resDate.innerHTML = `${resolvedDate.getMonth()}/${resolvedDate.getDay()}/${resolvedDate.getFullYear()} ${resolvedDate.getHours()}:${resolvedDate.getMinutes()}:${resolvedDate.getSeconds()}`;
+        resDate.innerHTML = `${resolvedDate.getMonth() + 1}/${resolvedDate.getDay()}/${resolvedDate.getFullYear()} ${resolvedDate.getHours()}:${resolvedDate.getMinutes()}:${resolvedDate.getSeconds()}`;
     head.appendChild(name);
     head.appendChild(amount);
     body.appendChild(submitted);

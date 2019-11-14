@@ -77,6 +77,8 @@ async function get(status: string) {
 
             case 'pending':
 
+                    document.getElementById('indicator').innerHTML = 'Pending'
+
                 response = await fetch('http://localhost:8080/ReimbursementSystem/reimbursements?status=pending', {
         
                     method: 'GET',
@@ -90,6 +92,8 @@ async function get(status: string) {
                 }); break
             
             case 'approved':
+
+                    document.getElementById('indicator').innerHTML = 'Approved'
 
                 response = await fetch('http://localhost:8080/ReimbursementSystem/reimbursements?status=approved', {
         
@@ -105,6 +109,8 @@ async function get(status: string) {
 
             case 'denied':
 
+                    document.getElementById('indicator').innerHTML = 'Denied'
+
                 response = await fetch('http://localhost:8080/ReimbursementSystem/reimbursements?status=denied', {
         
                     method: 'GET',
@@ -118,6 +124,8 @@ async function get(status: string) {
                 }); break
 
             default:
+
+                    document.getElementById('indicator').innerHTML = 'All'
 
                 response = await fetch('http://localhost:8080/ReimbursementSystem/reimbursements', {
         
@@ -169,6 +177,8 @@ function clearPage() {
     while(midSection.firstChild)
 
         midSection.firstChild.remove()
+
+        document.getElementById('indicator').innerHTML = ''
 
 }
 
@@ -232,12 +242,12 @@ function makeInfoCard(reimbursement: Reimbursement) {
 
     name.innerHTML                  = `${reimbursement.author}`
     amount.innerHTML                = `$${reimbursement.amount}`
-    submitted.innerHTML             = `${submittedDate.getMonth()}/${submittedDate.getDay()}/${submittedDate.getFullYear()} ${submittedDate.getHours()}:${submittedDate.getMinutes()}:${submittedDate.getSeconds()}`
+    submitted.innerHTML             = `${submittedDate.getMonth() + 1}/${submittedDate.getDay()}/${submittedDate.getFullYear()} ${submittedDate.getHours()}:${submittedDate.getMinutes()}:${submittedDate.getSeconds()}`
     status.innerHTML                = `${reimbursement.status}` 
     type.innerHTML                  = `${reimbursement.type}`
     desc.innerHTML                  = `${reimbursement.description}`
     if(resolver) resolver.innerHTML = `${reimbursement.resolver}` 
-    if(resDate)  resDate.innerHTML  = `${resolvedDate.getMonth()}/${resolvedDate.getDay()}/${resolvedDate.getFullYear()} ${resolvedDate.getHours()}:${resolvedDate.getMinutes()}:${resolvedDate.getSeconds()}`
+    if(resDate)  resDate.innerHTML  = `${resolvedDate.getMonth() + 1}/${resolvedDate.getDay()}/${resolvedDate.getFullYear()} ${resolvedDate.getHours()}:${resolvedDate.getMinutes()}:${resolvedDate.getSeconds()}`
     if(approve)  approve.innerHTML  = 'Approve'
     if(deny)     deny.innerHTML     = 'Deny'
 

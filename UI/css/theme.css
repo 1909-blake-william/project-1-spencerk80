@@ -64,7 +64,7 @@ body {
 
     display: flex;
     flex-direction: column;
-    background-color: rgb(235, 200, 148);
+    background-color: rgb(230, 230, 230);
 
 }
 
@@ -79,5 +79,20 @@ body {
     width: 95%;
     background-color: rgb(210, 170, 235);
     padding-bottom: 20px;
+
+}
+
+#indicator{
+
+    display: flex;
+    justify-content: center;
+    width: 95%;
+    padding-top: 10px;
+    text-decoration: underline;
+    margin-top: 0%;
+    margin-bottom: 0%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgb(210, 170, 235);
 
 }

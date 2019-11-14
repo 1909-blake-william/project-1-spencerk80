@@ -26,7 +26,7 @@ function showError(msg) {
     text.style.backgroundColor = 'red';
     text.style.fontSize = '12pt';
     text.style.textDecoration = 'none';
-    setTimeout(clearError, 1500);
+    setTimeout(clearError, 3000);
 }
 function clearError() {
     let text = document.getElementById("status");
