@@ -93,7 +93,7 @@ public class ReimbursementDaoSql implements ReimbursementDao {
 	}
 	
 	@Override
-	public List<Reimbursement> findByName(String username) throws SQLException {
+	public List<Reimbursement> findByName(String username, String status) throws SQLException {
 		
 		List<Reimbursement> list	= new ArrayList<>();
 		PreparedStatement	ps;
@@ -109,9 +109,10 @@ public class ReimbursementDaoSql implements ReimbursementDao {
 									"ON u1.id = reimbursment.author LEFT JOIN users u2 " +
 									"ON u2.id = reimbursment.resolver " +
 									"WHERE reimbursment.status = (SELECT id FROM reimbursement_status " +
-									"WHERE u1.username = ?)");
+									"WHERE reimbursement_status.status = ?) AND u1.username = ?");
 			
-			ps.setString(1, username);
+			ps.setString(1, status);
+			ps.setString(2, username);
 			rs = ps.executeQuery();
 			
 			while(rs.next())

@@ -6,14 +6,23 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Reimburesment</title>
     <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/tickets.css">
+    <link rel="stylesheet" href="css/card.css">
 </head>
-<body>
+<body onload='employeeCheck()'>
     <header><h1>Revature Reimbursement System 1.0</h1></header>
     <div id="nav-bar">
-        <a href="index.html"><div class="nav-item">Login</div></a>
+        <div class="nav-item" onclick="logout()">Logout</div>
+        <div class="nav-item" onclick="showForm()">New</div>
+        <div class="nav-item" onclick="get('all')">All</div>
+        <div class="nav-item" onclick="get('pending')">Pending</div>
+        <div class="nav-item" onclick="get('approved')">Approved</div>
+        <div class="nav-item" onclick="get('denied')">Denied</div>
     </div>
     <article id="mid-section">
         
     </article>
 </body>
+<script src="script/logout.js"></script>
+<script src="script/tickets.js"></script>
 </html>

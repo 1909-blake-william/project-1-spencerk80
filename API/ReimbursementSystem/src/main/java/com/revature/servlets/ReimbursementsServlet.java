@@ -51,13 +51,14 @@ public class ReimbursementsServlet extends HttpServlet {
 		
 		try {
 			
-			if(req.getParameter("status") != null) 
+			if(req.getParameter("name") != null)
+				
+				reimbursements = ReimbursementDao.currentImplementation.findByName(
+										req.getParameter("name"), req.getParameter("status") == null ? "PENDING" : req.getParameter("status"));
+			
+			else if(req.getParameter("status") != null) 
 				
 				reimbursements = ReimbursementDao.currentImplementation.findByStatus(SafeParser.parseStatus(req.getParameter("status")));
-				
-			else if(req.getParameter("name") != null)
-				
-				reimbursements = ReimbursementDao.currentImplementation.findByName(req.getParameter("name"));
 			
 			else
 				

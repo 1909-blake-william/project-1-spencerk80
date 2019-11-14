@@ -1,0 +1,44 @@
+form {
+
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    margin-right: auto;
+    margin-left: auto;
+
+}
+
+#mid-section {
+
+    flex-direction: row;
+    flex-wrap: wrap;
+
+}
+
+button {
+
+    margin-top: 10px;
+    height: 50px;
+    border-radius: 50px;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgba(4, 7, 196, 0.493);
+    font-size: 14pt;
+    font-weight: bold;
+
+}
+
+#error {
+
+    background-color: red;
+    text-align: center;
+
+}
+
+#success {
+
+    background-color: green;
+    text-align: center;
+
+}
